@@ -17,7 +17,7 @@ void show()
     {
         printf("\e[9%dm",i);
         cout<<showName[i]<<endl;
-        usleep(120000);
+        usleep(110000);
     }
 
 }
