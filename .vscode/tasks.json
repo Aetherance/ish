@@ -8,9 +8,8 @@
 				"-fdiagnostics-color=always",
 				"-g",
 				"*.cpp",
-				"*.hpp",
 				"-o",
-				"${fileDirname}/${fileBasenameNoExtension}"
+				"ish"
 			],
 			"options": {
 				"cwd": "${fileDirname}"
