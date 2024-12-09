@@ -1,6 +1,10 @@
 #include"shell.hpp"
 void show()
 {
+    if(fopen("./.has_been_visited","r") != NULL)    // 只需查看.has_been_visited文件的有无即可决定是否打印 oh my ish
+        return;
+    fopen("./.has_been_visited","w");
+
     string showName[9];
     showName[0] = "      __                                               __         ";
     showName[1] = "     /\\ \\                                  __         /\\ \\        ";
@@ -12,7 +16,6 @@ void show()
     showName[7] = "                                    /\\___/                        ";
     showName[8] = "                                    \\/__/                         ";
 
-    
     for(int i = 0;i<9;i++)
     {
         printf("\e[9%dm",i);
