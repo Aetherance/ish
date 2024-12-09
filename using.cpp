@@ -26,7 +26,7 @@ void show()
 
 void ish::PrintPrompt()
 {
-    cout<<"\e[100m"<<" "<<userName<<"@"<<hostName<<" "<<"\e[90m"<<"\e[104m"<<""<<" "<<wdPath<<" "<<"\e[43m"<<"\e[34m"<<""<<"\e[33m"<<"\e[39m"<<"  "<<gitHEAD<<" ± "<<"\e[33m"<<"\e[49m"<<""<<endl;
+    cout<<"\e[100m"<<" "<<userName<<"@"<<hostName<<" "<<"\e[90m"<<"\e[104m"<<""<<" "<<wdPath<<" "<<"\e[43m"<<"\e[34m"<<""<<"\e[33m"<<"\e[39m"<<"  "<<gitHEAD<<" ± "<<"\e[33m"<<"\e[49m"<<""<<"\e[39m"<<endl;
 
 
 
