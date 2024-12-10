@@ -4,9 +4,11 @@ int main()
     ish sh;
     void show();
     show();
-    sh.PrintPrompt();
-
-
+    while(true)
+    {
+        sh.PrintPrompt();
+        sh.GetCommand();
+    }
 
 
 

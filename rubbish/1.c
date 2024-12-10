@@ -28,13 +28,17 @@ void ish::PrintPrompt()
 {
     string colors = (string)"\e[100m" + "\e[90m" + "\e[104m" + "\e[43m" + "\e[34m" + "\e[33m" + "\e[39m" + "\e[33m" + "\e[49m" + "\e[39m";
     string output = "\e[100m" + (string)" " + userName + "@" + hostName + " " + (string)"\e[90m" + (string)"\e[104m" + "" + " " + wdPath + " " + "\e[43m" + "\e[34m" + "" + "\e[33m" + "\e[39m" + "  " + gitHEAD + " ± " + "\e[33m" + "\e[49m" + "" + "\e[39m";
-    cout << output << " ";
+    cout << output;
     PromptLen = output.size() - colors.size();
-
 }
 
 void ish::GetCommand()
 {
+    cout<<"\33[A";
+    for(int i = 0;i<PromptLen;i++)cout<<"\33[C";
     getline(cin,line);  // get a line of command
 }
 
+// 写了这么多，只为让光标移到上一行的末尾
+
+// 最后发现，只要cout的时候不换行就行了...
