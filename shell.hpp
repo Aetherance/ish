@@ -13,6 +13,7 @@ class ish
 {
 public:
     void GetCommand();
+    void LineClear();
 
 protected:
     string hostName = "TheINK";
@@ -20,6 +21,7 @@ protected:
     string wdPath = "~/CODE/ish";
     string gitHEAD = "master";
     static string line;
+    static vector<string>argv;
 
     int PromptLen;
 };
@@ -49,7 +51,7 @@ class Command: public ish
 public:
     void isClear();
     void isExit();
-
+    void ExeCommand();
 
 private:
     

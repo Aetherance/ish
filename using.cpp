@@ -24,10 +24,31 @@ void show()
     }
 }
 
+vector<string> split(string s)
+{
+    vector<string>result;
+    int pos = 0;
+    while (pos + 1 < s.size())
+    {
+        int n = 0;
+        while (s[pos+n]!=' '&&pos+n<s.size())
+        {
+            n++;
+        }
+        result.push_back(s.substr(pos,n));
+        pos += n;
+        while (s[pos] !=' '&&pos<s.size())
+        {
+            pos++;
+        }
+    }
+    
+    return result;
+}
+
 void nosignal()
 {
     signal(SIGINT,SIG_IGN);
-
 }
 
 void Prompt::PrintPrompt()
@@ -42,11 +63,17 @@ void ish::GetCommand()
     getline(cin,line);  // get a line of command
 }
 
-string ish::line = "Empty";
+string ish::line;
+vector<string> ish::argv;
+
+void ish::LineClear()
+{
+    line.clear();
+}
 
 void Command::isClear()
 {
-    if(line == "clear")
+    if(line == "clear"||line == "cls")
         system("clear");
 }
 
@@ -54,4 +81,13 @@ void Command::isExit()
 {
     if(line == "exit")
         exit(EXIT_SUCCESS);
+}
+
+void Command::ExeCommand()
+{
+    argv = split(line);
+
+    for(int i  = 0;i<argv.size();i++)
+        cout<<argv[i]<<endl;    // reread
+
 }
