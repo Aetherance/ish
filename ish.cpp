@@ -2,12 +2,14 @@
 int main()
 {
     ish sh;
+    Prompt pr;
     void show();
     show();
     while(true)
     {
-        sh.PrintPrompt();
+        pr.PrintPrompt();
         sh.GetCommand();
+
     }
 
 

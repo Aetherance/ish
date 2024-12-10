@@ -28,7 +28,7 @@ void ish::PrintPrompt()
 {
     string colors = (string)"\e[100m" + "\e[90m" + "\e[104m" + "\e[43m" + "\e[34m" + "\e[33m" + "\e[39m" + "\e[33m" + "\e[49m" + "\e[39m";
     string output = "\e[100m" + (string)" " + userName + "@" + hostName + " " + (string)"\e[90m" + (string)"\e[104m" + "" + " " + wdPath + " " + "\e[43m" + "\e[34m" + "" + "\e[33m" + "\e[39m" + "  " + gitHEAD + " ± " + "\e[33m" + "\e[49m" + "" + "\e[39m";
-    cout << output;
+    cout << output << endl;
     PromptLen = output.size() - colors.size();
 }
 
