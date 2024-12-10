@@ -24,6 +24,12 @@ void show()
     }
 }
 
+void nosignal()
+{
+    signal(SIGINT,SIG_IGN);
+
+}
+
 void Prompt::PrintPrompt()
 {
     isError ? (cout<< failed + output) : cout << output << " ";
@@ -31,9 +37,21 @@ void Prompt::PrintPrompt()
     PromptLen = output.size() - colors.size();
 }
 
-
 void ish::GetCommand()
 {
     getline(cin,line);  // get a line of command
 }
 
+string ish::line = "Empty";
+
+void Command::isClear()
+{
+    if(line == "clear")
+        system("clear");
+}
+
+void Command::isExit()
+{
+    if(line == "exit")
+        exit(EXIT_SUCCESS);
+}
