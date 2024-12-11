@@ -20,6 +20,12 @@ public:
     void LineClear();
     bool iscd();
 
+    ish()
+    {
+        char path[64];
+        realpath(".",path);
+        wdPath = path;
+    }    
 
 protected:
     string hostName = "TheINK";

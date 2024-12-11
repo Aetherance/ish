@@ -62,7 +62,8 @@ void nosignal()
     signal(SIGINT,SIG_IGN);
 }
 
-string ish::wdPath = "~/CODE/ish";
+string ish::wdPath;
+
 void Prompt::PrintPrompt()
 {
     output = "\e[100m" + (string)" " + userName + "@" + hostName + " " + (string)"\e[90m" + (string)"\e[104m" + "" + " " + wdPath + " " + "\e[43m" + "\e[34m" + "" + "\e[33m" + "  " + gitHEAD + " ± " + "\e[33m" + "\e[49m" + "" + "\e[39m\e[0m";
