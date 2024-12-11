@@ -4,10 +4,14 @@
 #include<unistd.h>
 #include<sys/ioctl.h>
 #include<signal.h>
+#include<string.h>
+#include<sys/wait.h>
 
 using namespace std;
 
 void nosignal();
+vector<string> split(string);
+vector<char*>fromStoC(vector<string>);
 
 class ish
 {

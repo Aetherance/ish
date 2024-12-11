@@ -16,7 +16,6 @@ int main()
         sh.GetCommand();
         cmd.isClear();
         cmd.isExit();
-
         
         cmd.ExeCommand();
         sh.LineClear();

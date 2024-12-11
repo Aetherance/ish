@@ -45,6 +45,18 @@ vector<string> split(string s)
     return result;
 }
 
+vector<char *> fromStoC(vector<string>s)
+{
+    vector<char *>c;
+    for(int i = 0;i<s.size();i++)
+    {
+        char * buf = new char[s[i].size()];
+        strcpy(buf,s[i].c_str());
+        c.push_back(buf);
+    }
+    return c;
+}
+
 void nosignal()
 {
     signal(SIGINT,SIG_IGN);
@@ -85,8 +97,16 @@ void Command::isExit()
 void Command::ExeCommand()
 {
     argv = split(line);
+    vector<char *>ar = fromStoC(argv);
+    pid_t pid = fork();
+    if(pid == 0)
+    {
+        if(strcmp(ar[0],"ls")==0)
+        {
+            ar.push_back((char *)"--color=auto");
+        }
 
-    for(int i  = 0;i<argv.size();i++)
-        cout<<argv[i]<<endl;    // reread
-
+        execvp(ar[0],ar.data());
+    }
+    wait(&pid);
 }
