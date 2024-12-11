@@ -18,28 +18,30 @@ class ish
 public:
     void GetCommand();
     void LineClear();
+    bool iscd();
+
 
 protected:
     string hostName = "TheINK";
     string userName = "user";
-    string wdPath = "~/CODE/ish";
+    static string wdPath;
     string gitHEAD = "master";
     static string line;
     static vector<string>argv;
 
     int PromptLen;
+    static bool isError;
 };
 
 class Prompt: public ish
 {
 public:
-    bool isError;
     void PrintPrompt();
     void PrintPrompt(int FAILED);
     Prompt()
     {
         colors = (string)"\e[100m" + "\e[90m" + "\e[104m" + "\e[43m" + "\e[34m" + "\e[33m" + "\e[39m" + "\e[33m" + "\e[49m" + "\e[39m";
-        output = "\e[100m" + (string)" " + userName + "@" + hostName + " " + (string)"\e[90m" + (string)"\e[104m" + "" + " " + wdPath + " " + "\e[43m" + "\e[34m" + "" + "\e[33m" + "  " + gitHEAD + " ± " + "\e[33m" + "\e[49m" + "" + "\e[39m\e[0m";
+        output;
         failed = "\e[100m\e[31m ✘\e[39m";
         isError = false;
     }
@@ -53,7 +55,7 @@ private:
 class Command: public ish
 {
 public:
-    void isClear();
+    bool isClear();
     void isExit();
     void ExeCommand();
 
@@ -65,6 +67,6 @@ class Pipe
 {
 public:
     int fdes[2];
-    
+
 
 };

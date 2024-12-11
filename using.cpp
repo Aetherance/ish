@@ -62,9 +62,11 @@ void nosignal()
     signal(SIGINT,SIG_IGN);
 }
 
+string ish::wdPath = "~/CODE/ish";
 void Prompt::PrintPrompt()
 {
-    isError ? (cout<< failed + output) : cout << output << " ";
+    output = "\e[100m" + (string)" " + userName + "@" + hostName + " " + (string)"\e[90m" + (string)"\e[104m" + "" + " " + wdPath + " " + "\e[43m" + "\e[34m" + "" + "\e[33m" + "  " + gitHEAD + " ± " + "\e[33m" + "\e[49m" + "" + "\e[39m\e[0m";
+    isError ? (cout<< failed + output << " ") : cout << output << " ";
     isError = false;
     PromptLen = output.size() - colors.size();
 }
@@ -72,20 +74,26 @@ void Prompt::PrintPrompt()
 void ish::GetCommand()
 {
     getline(cin,line);  // get a line of command
+    argv = split(line);
 }
 
 string ish::line;
 vector<string> ish::argv;
+bool ish::isError = false;
 
 void ish::LineClear()
 {
     line.clear();
 }
 
-void Command::isClear()
+bool Command::isClear()
 {
     if(line == "clear"||line == "cls")
+    {    
         system("clear");
+        return true;
+    }
+    return false;
 }
 
 void Command::isExit()
@@ -96,7 +104,10 @@ void Command::isExit()
 
 void Command::ExeCommand()
 {
-    argv = split(line);
+    if(isClear()||iscd())
+        return;
+    isExit();
+
     vector<char *>ar = fromStoC(argv);
     pid_t pid = fork();
     if(pid == 0)
@@ -106,7 +117,33 @@ void Command::ExeCommand()
             ar.push_back((char *)"--color=auto");
         }
 
-        execvp(ar[0],ar.data());
+        if(execvp(ar[0],ar.data())==-1)
+        {
+            isError = true;
+            cout<<"ish: command not found: "<<line<<endl;
+        }
     }
     wait(&pid);
+}
+
+bool ish::iscd()
+{
+    if(argv[0]!="cd")
+        return 0;
+    if(argv[1]=="-")
+    {
+        cout<<wdPath<<endl;
+        return 1;
+    }
+    if(chdir(argv[1].c_str())==-1)
+    {
+        cout<<"cd: path not found"<<endl;
+        isError = true;
+        return 1;
+    }
+    char rp[1000];
+    realpath(argv[1].c_str(),rp);
+    wdPath = rp;
+
+    return 1;
 }
