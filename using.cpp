@@ -28,7 +28,7 @@ vector<string> split(string s)
 {
     vector<string>result;
     int pos = 0;
-    while (pos + 1 < s.size())
+    while (pos< s.size())
     {
         int n = 0;
         while (s[pos+n]!=' '&&pos+n<s.size())
@@ -37,12 +37,11 @@ vector<string> split(string s)
         }
         result.push_back(s.substr(pos,n));
         pos += n;
-        while (s[pos] !=' '&&pos<s.size())
+        while (s[pos] ==' '&&pos<s.size())
         {
             pos++;
         }
     }
-    
     return result;
 }
 
