@@ -60,3 +60,11 @@ public:
 private:
     
 };
+
+class Pipe
+{
+public:
+    int fdes[2];
+    
+
+};
