@@ -36,6 +36,7 @@ protected:
     string gitHEAD = "master";
     static string line;
     static vector<string>argv;
+    static int pipes[2];
 
     int PromptLen;
     static bool isError;

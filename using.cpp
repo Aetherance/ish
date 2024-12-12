@@ -28,6 +28,7 @@ string ish::wdPath;
 string ish::line;
 vector<string> ish::argv;
 bool ish::isError = false;
+int ish::pipes[2];
 
 vector<string> split(string s,char ch)
 {
@@ -70,7 +71,6 @@ void nosignal()
     signal(SIGINT,SIG_IGN);
 }
 
-
 void Prompt::PrintPrompt()
 {
     output = "\e[100m" + (string)" " + userName + "@" + hostName + " " + (string)"\e[90m" + (string)"\e[104m" + "" + " " + wdPath + " " + "\e[43m" + "\e[34m" + "" + "\e[33m" + "  " + gitHEAD + " ± " + "\e[33m" + "\e[49m" + "" + "\e[39m\e[0m";
@@ -109,20 +109,33 @@ void Command::isExit()
 
 void Command::Process()
 {
+    vector<int [2]>vpipes;
     vector<string>v = split(line,'|');
     if(v.size()==1)
     {
+        pipes[0] = -1;
+        pipes[1] = -1;
         argv = v;
         ExeCommand();
     }
     else
     {
-        for(int i = 0;i<v.size();i++)
+        for(int i = 0;i<v.size()+2;i++)
+        {
+            int temp[2];
+            pipe(temp);
+        }
+        v[0][0] = -1;
+        v[v.size()-1][1] = -1;
+
+        for(int i = 0;i<v.size()+2;i++)
         {
             argv = split(v[i],' ');
+            pipes[0] = v[i][0];
+            pipes[1] = v[i][1];
             ExeCommand();
         }
-
+        
     }
 }
 
@@ -132,11 +145,14 @@ void Command::ExeCommand()
         return;
     isExit();
 
-
     vector<char *>ar = fromStoC(argv);
     pid_t pid = fork();
     if(pid == 0)
     {
+        char buf[1024];
+        if(pipes[0]!=-1)read(pipes[0],buf,1024);
+
+
         if(strcmp(ar[0],"ls")==0)
         {
             ar.push_back((char *)"--color=auto");
@@ -147,6 +163,8 @@ void Command::ExeCommand()
             isError = true;
             cout<<"ish: command not found: "<<argv[0]<<endl;
         }
+
+        write(pipes[1],stdout,1024);
     }
     wait(&pid);
 }
