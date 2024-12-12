@@ -28,13 +28,14 @@ string ish::wdPath;
 string ish::line;
 vector<string> ish::argv;
 bool ish::isError = false;
-static vector<string>Input;
-static vector<string>Output;
 
 vector<string> split(string s,char ch)
 {
     vector<string>result;
     int pos = 0;
+    while (s[pos]==ch)
+        pos++;
+    
     while (pos< s.size())
     {
         int n = 0;
@@ -106,12 +107,23 @@ void Command::isExit()
         exit(EXIT_SUCCESS);
 }
 
-void Process()
+void Command::Process()
 {
-    vector<string>v;
-    
+    vector<string>v = split(line,'|');
+    if(v.size()==1)
+    {
+        argv = v;
+        ExeCommand();
+    }
+    else
+    {
+        for(int i = 0;i<v.size();i++)
+        {
+            argv = split(v[i],' ');
+            ExeCommand();
+        }
 
-
+    }
 }
 
 void Command::ExeCommand()
@@ -119,6 +131,7 @@ void Command::ExeCommand()
     if(isClear()||iscd())
         return;
     isExit();
+
 
     vector<char *>ar = fromStoC(argv);
     pid_t pid = fork();
@@ -132,7 +145,7 @@ void Command::ExeCommand()
         if(execvp(ar[0],ar.data())==-1)
         {
             isError = true;
-            cout<<"ish: command not found: "<<line<<endl;
+            cout<<"ish: command not found: "<<argv[0]<<endl;
         }
     }
     wait(&pid);

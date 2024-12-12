@@ -16,7 +16,7 @@ int main()
     {
         pr.PrintPrompt();
         sh.GetCommand();
-        cmd.ExeCommand();
+        cmd.Process();
         sh.LineClear();
     }
 

@@ -10,11 +10,12 @@
 using namespace std;
 
 void nosignal();
-vector<string> split(string);
+vector<string> split(string,char);
 vector<char*>fromStoC(vector<string>);
 
 class ish
 {
+friend vector<string>split(string,char);
 public:
     void GetCommand();
     void LineClear();
@@ -65,7 +66,7 @@ public:
     bool isClear();
     void isExit();
     void ExeCommand();
-    
+    void Process();
 
 
 private:
