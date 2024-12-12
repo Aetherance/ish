@@ -24,20 +24,27 @@ void show()
     }
 }
 
-vector<string> split(string s)
+string ish::wdPath;
+string ish::line;
+vector<string> ish::argv;
+bool ish::isError = false;
+static vector<string>Input;
+static vector<string>Output;
+
+vector<string> split(string s,char ch)
 {
     vector<string>result;
     int pos = 0;
     while (pos< s.size())
     {
         int n = 0;
-        while (s[pos+n]!=' '&&pos+n<s.size())
+        while (s[pos+n]!=ch&&pos+n<s.size())
         {
             n++;
         }
         result.push_back(s.substr(pos,n));
         pos += n;
-        while (s[pos] ==' '&&pos<s.size())
+        while (s[pos] ==ch&&pos<s.size())
         {
             pos++;
         }
@@ -62,7 +69,6 @@ void nosignal()
     signal(SIGINT,SIG_IGN);
 }
 
-string ish::wdPath;
 
 void Prompt::PrintPrompt()
 {
@@ -75,12 +81,9 @@ void Prompt::PrintPrompt()
 void ish::GetCommand()
 {
     getline(cin,line);  // get a line of command
-    argv = split(line);
+    argv = split(line,' ');
 }
 
-string ish::line;
-vector<string> ish::argv;
-bool ish::isError = false;
 
 void ish::LineClear()
 {
@@ -101,6 +104,14 @@ void Command::isExit()
 {
     if(line == "exit")
         exit(EXIT_SUCCESS);
+}
+
+void Process()
+{
+    vector<string>v;
+    
+
+
 }
 
 void Command::ExeCommand()
@@ -133,17 +144,21 @@ bool ish::iscd()
         return 0;
     if(argv[1]=="-")
     {
-        cout<<wdPath<<endl;
+        char * lpath = getenv("OWD");
+        cout<<lpath<<endl;
+        chdir(lpath);
         return 1;
     }
+    char rp[1000];
+    realpath(argv[1].c_str(),rp);
     if(chdir(argv[1].c_str())==-1)
     {
         cout<<"cd: path not found"<<endl;
         isError = true;
         return 1;
     }
-    char rp[1000];
-    realpath(argv[1].c_str(),rp);
+    
+    setenv("OWD",wdPath.c_str(),1);
     wdPath = rp;
 
     return 1;

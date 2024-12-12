@@ -25,7 +25,8 @@ public:
         char path[64];
         realpath(".",path);
         wdPath = path;
-    }    
+        setenv("OWD",".",1);
+    }
 
 protected:
     string hostName = "TheINK";
@@ -64,6 +65,8 @@ public:
     bool isClear();
     void isExit();
     void ExeCommand();
+    
+
 
 private:
     
