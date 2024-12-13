@@ -109,33 +109,33 @@ void Command::isExit()
 
 void Command::Process()
 {
-    vector<int [2]>vpipes;
+    vector<int *>vpipes;
     vector<string>v = split(line,'|');
     if(v.size()==1)
     {
-        pipes[0] = -1;
-        pipes[1] = -1;
-        argv = v;
+        argv = split(v[0],' ');
         ExeCommand();
     }
     else
     {
-        for(int i = 0;i<v.size()+2;i++)
+        for(int i = 0;i<v.size()-1;i++)
         {
-            int temp[2];
+            int * temp = new int[2];
             pipe(temp);
-        }
-        v[0][0] = -1;
-        v[v.size()-1][1] = -1;
+            vpipes.push_back(temp);
+            cout<<vpipes[i][0]<<" "<<vpipes[i][1]<<endl;
 
-        for(int i = 0;i<v.size()+2;i++)
-        {
-            argv = split(v[i],' ');
-            pipes[0] = v[i][0];
-            pipes[1] = v[i][1];
-            ExeCommand();
         }
-        
+
+        for(int i = 0;i<v.size()-1;i++)
+        {
+            dup2(vpipes[i][0],1);
+            dup2(vpipes[i][1],0);
+
+            argv = split(v[i],' ');
+            ExeCommand();
+            cout<<"did";
+        }
     }
 }
 
@@ -149,22 +149,18 @@ void Command::ExeCommand()
     pid_t pid = fork();
     if(pid == 0)
     {
-        char buf[1024];
-        if(pipes[0]!=-1)read(pipes[0],buf,1024);
-
-
         if(strcmp(ar[0],"ls")==0)
         {
             ar.push_back((char *)"--color=auto");
-        }
+        } 
+
 
         if(execvp(ar[0],ar.data())==-1)
         {
             isError = true;
             cout<<"ish: command not found: "<<argv[0]<<endl;
         }
-
-        write(pipes[1],stdout,1024);
+        
     }
     wait(&pid);
 }
