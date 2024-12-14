@@ -107,6 +107,7 @@ void Command::isExit()
         exit(EXIT_SUCCESS);
 }
 
+
 void Command::Process()
 {
     vector<int *>vpipes;
@@ -138,6 +139,7 @@ void Command::Process()
         }
     }
 }
+
 
 void Command::ExeCommand()
 {
