@@ -28,7 +28,8 @@ string ish::wdPath;
 string ish::line;
 vector<string> ish::argv;
 bool ish::isError = false;
-int ish::pipes[2];
+int ish::ExeCount = 0;
+vector<int *> ish::fds;
 
 vector<string> split(string s,char ch)
 {
@@ -121,41 +122,37 @@ void Command::Process()
     {
         for(int i = 0;i<v.size()-1;i++)
         {
-            int * temp = new int[2];
-            pipe(temp);
-            vpipes.push_back(temp);
-            cout<<vpipes[i][0]<<" "<<vpipes[i][1]<<endl;
-
+            int * fd = new int[2];
+            pipe(fd);
+            fds.push_back(fd);
         }
 
-        for(int i = 0;i<v.size()-1;i++)
+        for(int i = 0;i<v.size();i++)
         {
-            dup2(vpipes[i][0],1);
-            dup2(vpipes[i][1],0);
-
             argv = split(v[i],' ');
             ExeCommand();
-            cout<<"did";
         }
+        
     }
 }
 
-
 void Command::ExeCommand()
 {
+    vector<char *>ar = fromStoC(argv);
+
     if(isClear()||iscd())
         return;
     isExit();
 
-    vector<char *>ar = fromStoC(argv);
     pid_t pid = fork();
     if(pid == 0)
     {
+        
+        
         if(strcmp(ar[0],"ls")==0)
         {
             ar.push_back((char *)"--color=auto");
         } 
-
 
         if(execvp(ar[0],ar.data())==-1)
         {
@@ -171,6 +168,12 @@ bool ish::iscd()
 {
     if(argv[0]!="cd")
         return 0;
+    
+    char * homepath = getenv("HOME");
+    if(argv[0] == "cd"&&argv.size()==1)
+        argv.push_back(homepath);
+
+    
     if(argv[1]=="-")
     {
         char * lpath = getenv("OWD");

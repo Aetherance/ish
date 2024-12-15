@@ -37,7 +37,8 @@ protected:
     string gitHEAD = "master";
     static string line;
     static vector<string>argv;
-    static int pipes[2];
+    static vector<int *>fds;
+    static int ExeCount;
 
     int PromptLen;
     static bool isError;
@@ -73,12 +74,4 @@ public:
 
 private:
     
-};
-
-class Pipe
-{
-public:
-    int fdes[2];
-
-
 };
