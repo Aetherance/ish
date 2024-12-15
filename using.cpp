@@ -175,7 +175,11 @@ bool ish::iscd()
     {
         char * lpath = getenv("OWD");
         cout<<lpath<<endl;
-        chdir(lpath);
+        if(chdir(lpath)==-1)
+        {
+            isError = true;
+        }
+        wdPath = lpath;
         return 1;
     }
     char rp[1000];
