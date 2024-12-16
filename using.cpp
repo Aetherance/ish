@@ -133,7 +133,7 @@ void Command::Process()
             ExeCommand();
             if(ExeCount == 0)close(fds[0][1]);
             if(ExeCount == 1)close(fds[0][0]);
-            if(ExeCount == 2)close(fds[1][1]);
+            if(ExeCount == 1)close(fds[1][1]);
             ExeCount ++;
         }
         ExeCount = 0;
@@ -155,8 +155,8 @@ void Command::ExeCommand()
     {
         if(ExeCount == 0)dup2(fds[0][1],1);
         if(ExeCount == 1)dup2(fds[0][0],0);
-        if(ExeCount == 2)dup2(fds[1][1],1);
-        if(ExeCount == 3)dup2(fds[1][0],0);
+        if(ExeCount == 1)dup2(fds[1][1],1);
+        if(ExeCount == 2)dup2(fds[1][0],0);
         
 
         if(strcmp(ar[0],"ls")==0)
