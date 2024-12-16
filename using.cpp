@@ -154,10 +154,9 @@ void Command::ExeCommand()
     
     if(pid == 0)
     {   
+        ar.push_back(NULL);
         if(ExeCount != 0)dup2(fds[ExeCount-1][0],0);
         if(ExeCount != fds.size())dup2(fds[ExeCount][1],1);
-
-        ar.push_back(NULL);
 
         // for(int i = 0;i<argv.size();i++)
         // {
@@ -178,6 +177,7 @@ void Command::ExeCommand()
 
         if(strcmp(ar[0],"ls")==0)
         {
+            ar.pop_back();
             ar.push_back((char *)"--color=auto");
             ar.push_back(NULL);
         } 
