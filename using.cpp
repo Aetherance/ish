@@ -131,12 +131,6 @@ void Command::Process()
         {
             argv = split(v[i],' ');
             ExeCommand();
-            // if(ExeCount == 0)close(fds[0][1]);
-            // if(ExeCount == 1)close(fds[0][0]);
-            // if(ExeCount == 1)close(fds[1][1]);
-            // if(ExeCount == 2)close(fds[1][0]);
-            // if(ExeCount == 2)close(fds[2][1]);
-            // if(ExeCount == 3)close(fds[2][0]);
 
             if(ExeCount != 0)close(fds[ExeCount-1][0]);
             if(ExeCount != fds.size())close(fds[ExeCount][1]);    
@@ -159,17 +153,28 @@ void Command::ExeCommand()
     pid_t pid = fork();
     
     if(pid == 0)
-    {
-        // if(ExeCount == 0)dup2(fds[0][1],1);
-        // if(ExeCount == 1)dup2(fds[0][0],0);
-        // if(ExeCount == 1)dup2(fds[1][1],1);
-        // if(ExeCount == 2)dup2(fds[1][0],0);
-        // if(ExeCount == 2)dup2(fds[2][1],1);
-        // if(ExeCount == 3)dup2(fds[2][0],0);
-        
+    {   
         if(ExeCount != 0)dup2(fds[ExeCount-1][0],0);
         if(ExeCount != fds.size())dup2(fds[ExeCount][1],1);
 
+        ar.push_back(NULL);
+
+        // for(int i = 0;i<argv.size();i++)
+        // {
+        //     if(argv[i].find('&')!=-1)
+        //     {   
+        //         argv[i] = argv[i].substr(0,argv[i].size()-1);
+        //         if(execvp(ar[0],ar.data())==-1)
+        //         {
+        //             isError = true;
+        //             cout<<"ish: command not found: "<<argv[0]<<endl;
+        //         }
+        //         // fork();
+
+        //     }
+
+
+        // }
 
         if(strcmp(ar[0],"ls")==0)
         {
