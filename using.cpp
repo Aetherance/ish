@@ -131,8 +131,13 @@ void Command::Process()
         {
             argv = split(v[i],' ');
             ExeCommand();
+            if(ExeCount == 0)close(fds[0][1]);
+            if(ExeCount == 1)close(fds[0][0]);
+            if(ExeCount == 2)close(fds[1][1]);
+            ExeCount ++;
         }
-        
+        ExeCount = 0;
+        fds.clear();
     }
 }
 
@@ -145,13 +150,19 @@ void Command::ExeCommand()
     isExit();
 
     pid_t pid = fork();
+    
     if(pid == 0)
     {
+        if(ExeCount == 0)dup2(fds[0][1],1);
+        if(ExeCount == 1)dup2(fds[0][0],0);
+        if(ExeCount == 2)dup2(fds[1][1],1);
+        if(ExeCount == 3)dup2(fds[1][0],0);
         
-        
+
         if(strcmp(ar[0],"ls")==0)
         {
             ar.push_back((char *)"--color=auto");
+            ar.push_back(NULL);
         } 
 
         if(execvp(ar[0],ar.data())==-1)

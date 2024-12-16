@@ -48,11 +48,8 @@ class Prompt: public ish
 {
 public:
     void PrintPrompt();
-    void PrintPrompt(int FAILED);
     Prompt()
     {
-        colors = (string)"\e[100m" + "\e[90m" + "\e[104m" + "\e[43m" + "\e[34m" + "\e[33m" + "\e[39m" + "\e[33m" + "\e[49m" + "\e[39m";
-        output;
         failed = "\e[100m\e[31m ✘\e[39m";
         isError = false;
     }
@@ -71,7 +68,4 @@ public:
     void ExeCommand();
     void Process();
 
-
-private:
-    
 };
