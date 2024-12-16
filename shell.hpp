@@ -33,8 +33,8 @@ public:
 protected:
     string hostName = "TheINK";
     string userName = "user";
-    static string wdPath;
     string gitHEAD = "master";
+    static string wdPath;
     static string line;
     static vector<string>argv;
     static vector<int *>fds;
