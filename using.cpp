@@ -131,10 +131,15 @@ void Command::Process()
         {
             argv = split(v[i],' ');
             ExeCommand();
-            if(ExeCount == 0)close(fds[0][1]);
+            // if(ExeCount == 0)close(fds[0][1]);
             // if(ExeCount == 1)close(fds[0][0]);
-            if(ExeCount == 1)close(fds[1][1]);
-            if(ExeCount == 2)close(fds[2][1]);
+            // if(ExeCount == 1)close(fds[1][1]);
+            // if(ExeCount == 2)close(fds[1][0]);
+            // if(ExeCount == 2)close(fds[2][1]);
+            // if(ExeCount == 3)close(fds[2][0]);
+
+            if(ExeCount != 0)close(fds[ExeCount-1][0]);
+            if(ExeCount != fds.size())close(fds[ExeCount][1]);    
 
             ExeCount ++;
         }
@@ -155,13 +160,16 @@ void Command::ExeCommand()
     
     if(pid == 0)
     {
-        if(ExeCount == 0)dup2(fds[0][1],1);
-        if(ExeCount == 1)dup2(fds[0][0],0);
-        if(ExeCount == 1)dup2(fds[1][1],1);
-        if(ExeCount == 2)dup2(fds[1][0],0);
-        if(ExeCount == 2)dup2(fds[2][1],1);
-        if(ExeCount == 3)dup2(fds[2][0],0);
+        // if(ExeCount == 0)dup2(fds[0][1],1);
+        // if(ExeCount == 1)dup2(fds[0][0],0);
+        // if(ExeCount == 1)dup2(fds[1][1],1);
+        // if(ExeCount == 2)dup2(fds[1][0],0);
+        // if(ExeCount == 2)dup2(fds[2][1],1);
+        // if(ExeCount == 3)dup2(fds[2][0],0);
         
+        if(ExeCount != 0)dup2(fds[ExeCount-1][0],0);
+        if(ExeCount != fds.size())dup2(fds[ExeCount][1],1);
+
 
         if(strcmp(ar[0],"ls")==0)
         {
