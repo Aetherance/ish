@@ -70,5 +70,4 @@ public:
     void isExit();
     void ExeCommand();
     void Process();
-
 };

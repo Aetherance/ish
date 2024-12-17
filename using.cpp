@@ -89,8 +89,15 @@ void Prompt::PrintPrompt()
 
 void ish::GetCommand()
 {
+    FLAG:
     getline(cin,line);  // get a line of command
     argv = split(line,' ');
+    if(line.empty())
+    {
+        Prompt news;
+        news.PrintPrompt();
+        goto FLAG;
+    }
 }
 
 void ish::LineClear()
