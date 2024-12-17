@@ -1,10 +1,6 @@
 #include"shell.hpp"
 void show()
 {
-    if(fopen("./.has_been_visited","r") != NULL)    // 只需查看.has_been_visited文件的有无即可决定是否打印 oh my ish
-        return;
-    fopen("./.has_been_visited","w");
-
     string showName[9];
     showName[0] = "      __                                               __         ";
     showName[1] = "     /\\ \\                                  __         /\\ \\        ";
@@ -22,6 +18,9 @@ void show()
         cout<<showName[i]<<endl;
         usleep(110000);
     }
+    cout<<"输入 '?' 以获取帮助"<<endl;
+    cout<<"请按任意键继续";
+    getchar();
 }
 
 string ish::wdPath;
@@ -31,6 +30,7 @@ bool ish::isError = false;
 int ish::ExeCount = 0;
 vector<int *> ish::fds;
 
+void help();
 vector<string> split(string s,char ch)
 {
     vector<string>result;
@@ -67,7 +67,6 @@ vector<char *> fromStoC(vector<string>s)
     return c;
 }
 
-
 void nosignal()
 {
     signal(SIGINT,SIG_IGN);
@@ -94,7 +93,6 @@ void ish::GetCommand()
     argv = split(line,' ');
 }
 
-
 void ish::LineClear()
 {
     line.clear();
@@ -116,9 +114,25 @@ void Command::isExit()
         exit(EXIT_SUCCESS);
 }
 
+bool isH(string line)
+{
+    if(line=="?")
+    {
+        help();
+        return true;
+    }
+    if(line=="!")
+    {
+        show();
+        return true;
+    }
+    return false;
+}
 
 void Command::Process()
 {
+    if(isH(line))
+        return;
     vector<int *>vpipes;
     vector<string>v = split(line,'|');
     if(v.size()==1)
@@ -162,22 +176,41 @@ void Command::ExeCommand()
     
     if(pid == 0)
     {   
+
+        if(ExeCount != 0)dup2(fds[ExeCount-1][0],0);
+        if(ExeCount != fds.size())dup2(fds[ExeCount][1],1);
+        
         if(isRedirect(line))
         {
             for(int i = 0;i<argv.size();i++)
             {
                 if(argv[i]=="<")
                 {
-                    int fd = open(argv[i+1].data(),O_RDONLY);
+                    int fd = open(argv[i+1].data(),O_RDONLY|O_CREAT);
                     dup2(fd,0);
                     ar.erase(ar.begin()+i);
+                    close(fd);
+                }
+                if(argv[i]==">")
+                {
+                    int fd = open(argv[i+1].data(),O_RDWR|O_CREAT|O_TRUNC,S_IRUSR|S_IWUSR);
+                    dup2(fd,1);
+                    ar.erase(ar.begin()+i);
+                    ar.erase(ar.begin()+i+1);
+                    close(fd);
+                }
+                if(argv[i]==">>")
+                {
+                    int fd = open(argv[i+1].data(),O_RDWR|O_APPEND|O_CREAT,S_IRUSR|S_IWUSR);
+                    dup2(fd,1);
+                    ar.erase(ar.begin()+i);
+                    ar.erase(ar.begin()+i+1);
+                    close(fd);
                 }
             }
         }
 
         ar.push_back(NULL);
-        if(ExeCount != 0)dup2(fds[ExeCount-1][0],0);
-        if(ExeCount != fds.size())dup2(fds[ExeCount][1],1);
 
         if(strcmp(ar[0],"ls")==0)
         {
@@ -234,4 +267,9 @@ bool ish::iscd()
     wdPath = rp;
 
     return 1;
+}
+
+void help()
+{
+    cout<<"你知道吗？输入!可以观看炫酷的动画。"<<endl;
 }

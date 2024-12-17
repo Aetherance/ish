@@ -8,9 +8,6 @@ int main()
     void show();
     show();
     if(!DB)nosignal();
-    system("clear");
-    cout<<"In ish!"<<endl;
-    sleep(1);
     system("clear"); 
     while(true)
     {
