@@ -67,9 +67,17 @@ vector<char *> fromStoC(vector<string>s)
     return c;
 }
 
+
 void nosignal()
 {
     signal(SIGINT,SIG_IGN);
+}
+
+bool isRedirect()
+{
+    if(ish::line.find('<')==-1&&ish::line.find('>')==-1)
+        return 0;
+    return 1;
 }
 
 void Prompt::PrintPrompt()

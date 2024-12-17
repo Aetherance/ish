@@ -13,10 +13,12 @@ using namespace std;
 void nosignal();
 vector<string> split(string,char);
 vector<char*>fromStoC(vector<string>);
+bool isRedirect();
 
 class ish
 {
 friend vector<string>split(string,char);
+friend bool isRedirect();
 public:
     void GetCommand();
     void LineClear();
