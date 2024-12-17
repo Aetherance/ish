@@ -73,9 +73,9 @@ void nosignal()
     signal(SIGINT,SIG_IGN);
 }
 
-bool isRedirect()
+bool isRedirect(string str)
 {
-    if(ish::line.find('<')==-1&&ish::line.find('>')==-1)
+    if(str.find('<')==-1&&str.find('>')==-1)
         return 0;
     return 1;
 }
@@ -162,6 +162,19 @@ void Command::ExeCommand()
     
     if(pid == 0)
     {   
+        if(isRedirect(line))
+        {
+            for(int i = 0;i<argv.size();i++)
+            {
+                if(argv[i]=="<")
+                {
+                    int fd = open(argv[i+1].data(),O_RDONLY);
+                    dup2(fd,0);
+                    ar.erase(ar.begin()+i);
+                }
+            }
+        }
+
         ar.push_back(NULL);
         if(ExeCount != 0)dup2(fds[ExeCount-1][0],0);
         if(ExeCount != fds.size())dup2(fds[ExeCount][1],1);
@@ -171,7 +184,7 @@ void Command::ExeCommand()
             ar.pop_back();
             ar.push_back((char *)"--color=auto");
             ar.push_back(NULL);
-        } 
+        }
 
         if(execvp(ar[0],ar.data())==-1)
         {
@@ -181,6 +194,10 @@ void Command::ExeCommand()
         
     }
     wait(&pid);
+    if           (strcmp(ar[0],"cat")==0)
+    {
+        cout<<endl;
+    }
 }
 
 bool ish::iscd()
