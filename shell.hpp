@@ -60,7 +60,7 @@ private:
     string failed;
 };
 
-class Command: public ish
+class Command: public Prompt
 {
 public:
     bool isClear();
