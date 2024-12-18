@@ -91,6 +91,12 @@ void ish::GetCommand()
 {
     FLAG:
     getline(cin,line);  // get a line of command
+    int pos = 0;
+    while (line[pos] == ' ')
+    {
+        pos ++;
+    }
+    line = line.substr(pos);
     argv = split(line,' ');
     if(line.empty())
     {
