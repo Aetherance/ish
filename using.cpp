@@ -29,7 +29,7 @@ vector<string> ish::argv;
 bool ish::isError = false;
 int ish::ExeCount = 0;
 vector<int *> ish::fds;
-
+bool ish::pipeError = false; 
 void help();
 vector<string> split(string s,char ch)
 {
@@ -84,7 +84,6 @@ void Prompt::PrintPrompt()
     output = "\e[100m" + (string)" " + userName + "@" + hostName + " " + (string)"\e[90m" + (string)"\e[104m" + "" + " " + wdPath + " " + "\e[43m" + "\e[34m" + "" + "\e[33m" + "  " + gitHEAD + " ± " + "\e[33m" + "\e[49m" + "" + "\e[39m\e[0m";
     isError ? (cout<< failed + output << " ") : cout << output << " ";
     isError = false;
-    PromptLen = output.size() - colors.size();
 }
 
 void ish::GetCommand()
@@ -157,7 +156,7 @@ void Command::Process()
     {
         if(v.size()==0)
         {
-            cout<<"ish: 管道的两边得有参数"<<endl;
+            cout<<"ish: | 解析错误"<<endl;
             isError = 1;
             return;
         }
@@ -194,8 +193,7 @@ void Command::ExeCommand()
     pid_t pid = fork();
     
     if(pid == 0)
-    {   
-
+    {
         if(ExeCount != 0)dup2(fds[ExeCount-1][0],0);
         if(ExeCount != fds.size())dup2(fds[ExeCount][1],1);
         
@@ -203,7 +201,7 @@ void Command::ExeCommand()
         {
             if(argv.size()<3)
             {
-                cout<<"ish: 重定向得有两个参数"<<endl;
+                cout<<"ish: 重定向 解析错误"<<endl;
                 isError = 1;
                 return;
             }
@@ -211,7 +209,7 @@ void Command::ExeCommand()
             {
                 if(argv[i]=="<")
                 {
-                    int fd = open(argv[i+1].data(),O_RDONLY|O_CREAT);
+                    int fd = open(argv[i+1].data(),O_RDONLY);
                     dup2(fd,0);
                     ar.erase(ar.begin()+i);
                     close(fd);
@@ -248,14 +246,10 @@ void Command::ExeCommand()
         {
             isError = true;
             cout<<"ish: command not found: "<<argv[0]<<endl;
+            return;
         }
-        
     }
     wait(&pid);
-    if(strcmp(ar[0],"cat")==0)
-    {
-        cout<<endl;
-    }
 }
 
 bool ish::iscd()

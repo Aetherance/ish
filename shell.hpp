@@ -7,6 +7,7 @@
 #include<string.h>
 #include<sys/wait.h>
 #include<fcntl.h>
+#include<pwd.h>
 
 using namespace std;
 
@@ -31,18 +32,24 @@ public:
         realpath(".",path);
         wdPath = path;
         setenv("OWD",".",1);
+        char hostname[64];
+        gethostname(hostname,64);
+        hostName = hostname;
+        int userid = getuid();
+        struct passwd * pwd = getpwuid(userid);
+        userName = pwd->pw_name;
     }
 
 protected:
-    string hostName = "TheINK";
-    string userName = "user";
+    string hostName;
+    string userName;
     string gitHEAD = "master";
     static string wdPath;
     static string line;
     static vector<string>argv;
     static vector<int *>fds;
     static int ExeCount;
-
+    static bool pipeError;
     int PromptLen;
     static bool isError;
 };
