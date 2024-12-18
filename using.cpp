@@ -155,6 +155,12 @@ void Command::Process()
     }
     else
     {
+        if(v.size()==0)
+        {
+            cout<<"ish: 管道的两边得有参数"<<endl;
+            isError = 1;
+            return;
+        }
         for(int i = 0;i<v.size()-1;i++)
         {
             int * fd = new int[2];
@@ -195,6 +201,12 @@ void Command::ExeCommand()
         
         if(isRedirect(line))
         {
+            if(argv.size()<3)
+            {
+                cout<<"ish: 重定向得有两个参数"<<endl;
+                isError = 1;
+                return;
+            }
             for(int i = 0;i<argv.size();i++)
             {
                 if(argv[i]=="<")
@@ -240,7 +252,7 @@ void Command::ExeCommand()
         
     }
     wait(&pid);
-    if           (strcmp(ar[0],"cat")==0)
+    if(strcmp(ar[0],"cat")==0)
     {
         cout<<endl;
     }
